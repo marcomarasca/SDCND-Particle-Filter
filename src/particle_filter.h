@@ -25,26 +25,18 @@ struct Particle {
 
 class ParticleFilter {
  public:
-  // Default random engine
-  std::mt19937 rand_gen_;
 
   // Number of particles to draw
   int num_particles_;
-
-  // Flag, if filter is initialized
-  bool is_initialized_;
-
-  // Vector of weights of all particles
-  std::vector<double> weights_;
 
   // Set of current particles
   std::vector<Particle> particles_;
 
   // Constructor
-  ParticleFilter() : rand_gen_(std::random_device()()), num_particles_(100), is_initialized_(false) {}
+  ParticleFilter() : _rand_gen(std::random_device()()), num_particles_(100), _is_initialized(false) {}
 
   // @param num_particles Number of particles
-  ParticleFilter(int num_particles) : rand_gen_(std::random_device()()), num_particles_(num_particles), is_initialized_(false) {}
+  ParticleFilter(int num_particles) : _rand_gen(std::random_device()()), num_particles_(num_particles), _is_initialized(false) {}
 
   // Destructor
   ~ParticleFilter() {}
@@ -103,9 +95,18 @@ class ParticleFilter {
   /**
    * initialized Returns whether particle filter is initialized yet or not.
    */
-  const bool initialized() const { return is_initialized_; }
+  const bool initialized() const { return _is_initialized; }
 
  private:
+
+  // Default random engine
+  std::mt19937 _rand_gen;
+
+  // Flag, if filter is initialized
+  bool _is_initialized;
+
+  // Vector of weights of all particles
+  std::vector<double> _weights;
   /**
    * Returns the list of landmarks in the map that in the range of the given particle.
    *

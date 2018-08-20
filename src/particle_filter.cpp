@@ -28,20 +28,20 @@ void ParticleFilter::init(double x, double y, double theta, double std[]) {
   normal_distribution<double> dist_theta{theta, std[2]};
 
   particles_.resize(num_particles_);
-  weights_.resize(num_particles_);
+  _weights.resize(num_particles_);
 
   for (int i = 0; i < num_particles_; ++i) {
     particles_[i].id = i;
-    particles_[i].x = dist_x(rand_gen_);
-    particles_[i].y = dist_y(rand_gen_);
-    particles_[i].theta = dist_theta(rand_gen_);
+    particles_[i].x = dist_x(_rand_gen);
+    particles_[i].y = dist_y(_rand_gen);
+    particles_[i].theta = dist_theta(_rand_gen);
 
     // Just for clarity, this will be reinizialized at each updateWeights call
     particles_[i].weight = 1.0;
-    weights_[i] = 1.0;
+    _weights[i] = 1.0;
   }
 
-  is_initialized_ = true;
+  _is_initialized = true;
 }
 
 void ParticleFilter::prediction(double delta_t, double std_pos[], double velocity, double yaw_rate) {
@@ -64,9 +64,9 @@ void ParticleFilter::prediction(double delta_t, double std_pos[], double velocit
     // Adds noise, note that the std_pos contains the uncertainty of the GPS position so this is not technically right
     // as the noise should be computed in terms of uncertainity of the sensor measurement (e.g. velocity, yaw rate) but
     // it will do for this project.
-    particle.x += dist_x(rand_gen_);
-    particle.y += dist_y(rand_gen_);
-    particle.theta += dist_theta(rand_gen_);
+    particle.x += dist_x(_rand_gen);
+    particle.y += dist_y(_rand_gen);
+    particle.theta += dist_theta(_rand_gen);
   }
 }
 
@@ -120,19 +120,19 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
       particles_[i].weight *= exp(-exponent) / gauss_norm;
     }
 
-    weights_[i] = particles_[i].weight;
+    _weights[i] = particles_[i].weight;
     setAssociations(particles_[i], associations, sense_x, sense_y);
   }
 }
 
 void ParticleFilter::resample() {
   // Resample particles with replacement with probability proportional to their weight.
-  discrete_distribution<int> dist_p(weights_.begin(), weights_.end());
+  discrete_distribution<int> dist_p(_weights.begin(), _weights.end());
 
   vector<Particle> particles_new(num_particles_);
 
   for (int i = 0; i < num_particles_; ++i) {
-    particles_new[i] = particles_[dist_p(rand_gen_)];
+    particles_new[i] = particles_[dist_p(_rand_gen)];
   }
 
   particles_ = move(particles_new);
