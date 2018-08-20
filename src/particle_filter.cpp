@@ -70,8 +70,8 @@ void ParticleFilter::prediction(double delta_t, double std_pos[], double velocit
   }
 }
 
-void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
-                                   const std::vector<LandmarkObs>& observations, const Map& map_landmarks) {
+void ParticleFilter::updateWeights(double sensor_range, double std_landmark[], const vector<LandmarkObs>& observations,
+                                   const Map& map_landmarks) {
   // Terms used later on in the multi-variate gaussian
   const double std_x_2 = 2.0 * std_landmark[0] * std_landmark[0];
   const double std_y_2 = 2.0 * std_landmark[1] * std_landmark[1];
@@ -138,8 +138,8 @@ void ParticleFilter::resample() {
   particles_ = move(particles_new);
 }
 
-void ParticleFilter::setAssociations(Particle& particle, const std::vector<int>& associations,
-                                     const std::vector<double>& sense_x, const std::vector<double>& sense_y) {
+void ParticleFilter::setAssociations(Particle& particle, const vector<int>& associations, const vector<double>& sense_x,
+                                     const vector<double>& sense_y) {
   // particle: the particle to assign each listed association, and association's (x,y) world
   // coordinates mapping to
   // associations: The landmark id that goes along with each listed association
@@ -196,7 +196,7 @@ inline LandmarkObs ParticleFilter::_convertToMapCoordinates(const Particle& part
   return LandmarkObs{observation.id, x_map, y_map};
 }
 
-inline std::vector<Map::single_landmark_s>::const_iterator ParticleFilter::_findClosestLandmark(
+inline vector<Map::single_landmark_s>::const_iterator ParticleFilter::_findClosestLandmark(
     const LandmarkObs& observation, const vector<Map::single_landmark_s>& landmarks) {
   double min_distance = numeric_limits<double>::max();
   auto closest_landmark = landmarks.end();

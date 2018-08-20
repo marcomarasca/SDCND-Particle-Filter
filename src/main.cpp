@@ -34,7 +34,7 @@ int main(int argc, char *argv[]) {
 
   double sigma_pos[3] = {0.3, 0.3, 0.01};  // GPS measurement uncertainty [x [m], y [m], theta [rad]]
   double sigma_landmark[2] = {0.3, 0.3};   // Landmark measurement uncertainty [x [m], y [m]]
-  int num_particles;
+  int num_particles = 100;
 
   if (argc > 1) {
     std::istringstream iss(argv[1]);
