@@ -25,7 +25,7 @@ std::string hasData(std::string s) {
   return "";
 }
 
-int main() {
+int main(int argc, char *argv[]) {
   uWS::Hub h;
 
   // Set up parameters here
@@ -34,6 +34,17 @@ int main() {
 
   double sigma_pos[3] = {0.3, 0.3, 0.01};  // GPS measurement uncertainty [x [m], y [m], theta [rad]]
   double sigma_landmark[2] = {0.3, 0.3};   // Landmark measurement uncertainty [x [m], y [m]]
+  int num_particles;
+
+  if (argc > 1) {
+    std::istringstream iss(argv[1]);
+    if (!(iss >> num_particles)) {
+      cout << "Could not parse the number of particles from command line argument " << argv[1] << endl;
+      num_particles = 100;
+    }
+  }
+
+  cout << "Using " << num_particles << " particles." << endl;
 
   // Read map data
   Map map;
@@ -43,10 +54,13 @@ int main() {
   }
 
   // Create particle filter
-  ParticleFilter pf;
+  ParticleFilter pf{num_particles};
+
+  // Operations timings
   chrono::duration<int64_t, nano> t_pred{chrono::nanoseconds::zero()};
   chrono::duration<int64_t, nano> t_update{chrono::nanoseconds::zero()};
   chrono::duration<int64_t, nano> t_resample{chrono::nanoseconds::zero()};
+
   int i = 0;
 
   h.onMessage([&i, &t_pred, &t_update, &t_resample, &pf, &map, &delta_t, &sensor_range, &sigma_pos, &sigma_landmark](

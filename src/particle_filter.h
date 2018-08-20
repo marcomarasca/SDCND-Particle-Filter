@@ -33,10 +33,10 @@ class ParticleFilter {
   std::vector<Particle> particles_;
 
   // Constructor
-  ParticleFilter() : _rand_gen(std::random_device()()), num_particles_(100), _is_initialized(false) {}
+  ParticleFilter() : num_particles_(100), _rand_gen(std::random_device()()), _is_initialized(false) {}
 
   // @param num_particles Number of particles
-  ParticleFilter(int num_particles) : _rand_gen(std::random_device()()), num_particles_(num_particles), _is_initialized(false) {}
+  ParticleFilter(int num_particles) : num_particles_(num_particles),_rand_gen(std::random_device()()), _is_initialized(false) {}
 
   // Destructor
   ~ParticleFilter() {}
